@@ -2,7 +2,8 @@ cff-version: 1.2.0
 message: "Если вы используете этот код или результаты, сошлитесь на него так."
 title: "scii-adversarial: стойкость правила допуска обновлений SCII к компрометации участников цепочки сборки и обновления"
 type: software
-version: 0.1.0
+version: 1.1.0
+date-released: 2026-11-13
 license: Apache-2.0
 repository-code: "https://github.com/alexqzm/scii-adversarial"
 authors:

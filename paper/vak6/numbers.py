@@ -45,6 +45,22 @@ def after_fix():
     }
 
 
+def gate017():
+    """Поисковый анализ: проверка версии и платы без заявки комплекта (подготовлено для scii-gate 0.1.7)."""
+    path = os.path.join(RES, "gate-0.1.7", "analysis.json")
+    if not os.path.exists(path):
+        return {}
+    an = load("gate-0.1.7/analysis.json")
+    sep = an["deployments"]["D1"]["separate"]["families"]
+    org = an["deployments"]["D1"]["org"]["families"]
+    return {
+        "g017_k_D1": {r: [sep[g][r]["admit"]["k"] for g in GOALS] for r in RULES},
+        "g017_reach_D1": {r: [sep[g][r]["reach"]["k"] for g in GOALS] for r in RULES},
+        "g017_org_k_D1": {r: [org[g][r]["admit"]["k"] for g in GOALS] for r in RULES},
+        "g017_org_reach_D1": {r: [org[g][r]["reach"]["k"] for g in GOALS] for r in RULES},
+    }
+
+
 def numbers():
     an, mono, emu, mut = load("analysis.json"), load("monotonicity.json"), load("emulation.json"), load("mutation.json")
     fam = an["deployments"]["D1"]["separate"]["families"]
@@ -73,6 +89,10 @@ def numbers():
         "cost_dearer": {r: rc[r] for r in RULES if r != "П10"},
         "cost_dearer_pct": {r: pct(rc[r]) for r in RULES if r != "П10"},
         "org_k_scii": [org[g]["П10"]["admit"]["k"] for g in GOALS],
+        "org_k_D1": {r: [org[g][r]["admit"]["k"] for g in GOALS] for r in RULES},
+        "org_reach_D1": {r: [org[g][r]["reach"]["k"] for g in GOALS] for r in RULES},
+        "d3_not_weaker": {r: an["deployments"]["D3"]["separate"]["dominance"]["П10"][r]["not_weaker"]
+                          for r in RULES if r != "П10"},
         "availability_D1": {r: av[r] for r in RULES},
         "genuine_incomplete": an["availability"]["D1"]["incomplete_records"],
         "d2_k_c1": {r: an["deployments"]["D2"]["separate"]["families"]["Ц1"][r]["admit"]["k"] for r in RULES},
@@ -94,6 +114,7 @@ def numbers():
         "mut_crash_exc": crash_exc, "mut_oom": oom, "mut_hang": hang,
         "mut_decisions": sum(1 for r in rows if r.get("outcome") == "решение"),
         **after_fix(),
+        **gate017(),
     }
 
 

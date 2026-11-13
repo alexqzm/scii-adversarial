@@ -12,6 +12,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RES = os.path.join(ROOT, "results")
+sys.path.insert(0, ROOT)
+from adv.report import hypotheses  # noqa: E402
 GOALS = ["Ц1", "Ц2", "Ц3", "Ц4", "Ц5", "Ц6"]
 RULES = ["П1", "П2", "П3", "П4", "П5", "П6", "П7", "П8", "П9", "П10", "П11"]
 
@@ -40,8 +42,14 @@ def numbers():
     crash_exc = sum(1 for r in rows if r.get("outcome") == "авария" and r.get("exit") == 1)
     oom = sum(1 for r in rows if r.get("outcome") == "авария" and r.get("exit") == -9)
     hang = sum(1 for r in rows if r.get("outcome") == "зависание")
+
+    def stronger(a, b):
+        """k метода (a) строго больше k правила (b); None означает недостижимость (∞)."""
+        return b is not None and (a is None or a > b)
     return {
         "k_admit_D1": k, "k_reach_D1": reach,
+        "strict_k_vs_scii": {r: sum(1 for a, b in zip(k["П10"], k[r]) if stronger(a, b)) for r in RULES[:6]},
+        "hypotheses": {h["id"]: h["ok"] for h in hypotheses(an, mono, emu["pmi"], emu["goals"], mut)},
         "cost_draws": an["deployments"]["D1"]["separate"]["random_cost"]["draws"],
         "cost_not_cheaper_min": min(nc[r] for r in RULES if r != "П10"),
         "cost_dearer": {r: rc[r] for r in RULES if r != "П10"},

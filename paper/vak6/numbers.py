@@ -27,6 +27,24 @@ def pct(x):
     return "%d %%" % round(100 * x)
 
 
+def after_fix():
+    """Испытание на исправленной версии scii-gate (results/after-0.1.6), если оно есть."""
+    if not os.path.isdir(os.path.join(RES, "after-0.1.6")):
+        return {}
+    mut, emu = load("after-0.1.6/mutation.json"), load("after-0.1.6/emulation.json")
+    rows = mut["rows"]
+    return {
+        "fix_version": "0.1.6",
+        "fix_mut_total": len(rows),
+        "fix_mut_decisions": sum(1 for r in rows if r.get("outcome") == "решение"),
+        "fix_mut_failures": sum(1 for r in rows if r.get("outcome") in ("авария", "зависание")),
+        "fix_mut_g8": sum(1 for r in rows if r.get("violation_g8")),
+        "fix_emu_equal": (emu["pmi"]["states_equal"] == emu["pmi"]["states_total"]
+                          and emu["pmi"]["decisions_equal"] == emu["pmi"]["decisions_total"]
+                          and not emu["goals"]["mismatches"]),
+    }
+
+
 def numbers():
     an, mono, emu, mut = load("analysis.json"), load("monotonicity.json"), load("emulation.json"), load("mutation.json")
     fam = an["deployments"]["D1"]["separate"]["families"]
@@ -75,6 +93,7 @@ def numbers():
         "mut_total": len(rows), "mut_g8": sum(1 for r in rows if r.get("violation_g8")),
         "mut_crash_exc": crash_exc, "mut_oom": oom, "mut_hang": hang,
         "mut_decisions": sum(1 for r in rows if r.get("outcome") == "решение"),
+        **after_fix(),
     }
 
 

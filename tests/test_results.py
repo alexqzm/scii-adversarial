@@ -56,3 +56,24 @@ def test_summary_is_up_to_date(tmp_path):
     with open(os.path.join(RES, "summary.md"), encoding="utf-8") as f:
         after = f.read()
     assert before == after
+
+
+def test_mutation_compare_ignores_key_dependent_digests():
+    """Сверка искажённых комплектов не зависит от ключей прогона, но замечает смену подлинности образа."""
+    import copy
+    from adv.compare import _diff, mutation_rows
+    res = _load("mutation.json")
+    g = res["genuine_image_sha256"]
+    rekeyed, flipped = copy.deepcopy(res), copy.deepcopy(res)
+    for r in rekeyed["rows"]:
+        if r.get("image_sha256") and r["image_sha256"] != g:
+            r["image_sha256"] = "0" * 64
+    for r in flipped["rows"]:
+        if r.get("image_sha256") == g:
+            r["image_sha256"] = "1" * 64
+            break
+
+    def keyed(x):
+        return {"%s|%s" % k: v for k, v in mutation_rows(x).items()}
+    assert _diff(keyed(rekeyed), keyed(res)) == []
+    assert _diff(keyed(flipped), keyed(res))

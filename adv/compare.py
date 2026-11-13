@@ -49,8 +49,18 @@ def _diff(a, b, path="", out=None, limit=20):
 
 
 def mutation_rows(res):
-    keep = ("outcome", "exit", "decision", "states", "violation_g8", "error", "image_sha256")
-    return {(r["base"], r["mutation"]): {k: r.get(k) for k in keep} for r in res["rows"]}
+    """Сравниваемые поля искажённого комплекта. Дайджест восстановленного образа сам по себе не сравнивается:
+    у неподлинного образа он зависит от ключей, перевыпускаемых при каждом прогоне (например, когда пакет
+    подменён аттестацией или в образе нет дескриптора и поле подписи не обнуляется). Сравнивается признак
+    «образ подлинный», на котором держится Г8."""
+    keep = ("outcome", "exit", "decision", "states", "violation_g8", "error")
+    genuine = res.get("genuine_image_sha256")
+    out = {}
+    for r in res["rows"]:
+        row = {k: r.get(k) for k in keep}
+        row["image_genuine"] = None if r.get("image_sha256") is None else r["image_sha256"] == genuine
+        out[(r["base"], r["mutation"])] = row
+    return out
 
 
 def main(argv=None) -> int:

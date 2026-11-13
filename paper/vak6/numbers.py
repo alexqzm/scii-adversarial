@@ -62,6 +62,7 @@ def numbers():
         "d3_c1_counts": {"П7": d3["Ц1"]["П7"]["admit"]["count"], "П10": d3["Ц1"]["П10"]["admit"]["count"],
                           "all": 2 ** (len(an["deployments"]["D3"]["separate"]["units"]) - 1)},
         "d3_c6_k": {r: d3["Ц6"][r]["admit"]["k"] for r in ("П8", "П10", "П11")},
+        "d3_k_scii": [d3[g]["П10"]["admit"]["k"] for g in GOALS],
         "binary_vs_reach": an["binary_admit_vs_scii_reach_D1"],
         "mono_records": mono["D1"]["exhaustive"]["records"], "mono_sample": mono["D1"]["sample"]["records"],
         "mono_violations": sum(x[0] + x[1] for d in ("D1", "D2") for p in ("exhaustive", "sample")

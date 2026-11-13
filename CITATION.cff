@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "Если вы используете этот код или результаты, сошлитесь на него так."
+title: "scii-adversarial: стойкость правила допуска обновлений SCII к компрометации участников цепочки сборки и обновления"
+type: software
+version: 0.1.0
+license: Apache-2.0
+repository-code: "https://github.com/alexqzm/scii-adversarial"
+authors:
+  - family-names: Kuzmin
+    given-names: Alexander
+    orcid: "https://orcid.org/0000-0002-0393-412X"
+keywords:
+  - software supply chain
+  - firmware update
+  - adversarial evaluation
+  - attacker model
+  - evidence graph
+  - in-toto
+  - SLSA
+  - cyber-physical systems
+  - ArduPilot
+references:
+  - type: software
+    title: "scii-gate: гейт допуска обновлений ПО киберфизических систем по графу доказательств"
+    version: 0.1.5
+    doi: 10.5281/zenodo.24005892
+    repository-code: "https://github.com/alexqzm/scii-gate"
+    authors:
+      - family-names: Kuzmin
+        given-names: Alexander

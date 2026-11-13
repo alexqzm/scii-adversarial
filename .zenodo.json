@@ -1,0 +1,39 @@
+{
+  "title": "scii-adversarial: стойкость правила допуска обновлений SCII к компрометации участников цепочки сборки и обновления",
+  "upload_type": "software",
+  "version": "0.1.0",
+  "language": "rus",
+  "license": "apache-2.0",
+  "creators": [
+    {
+      "name": "Kuzmin, Alexander",
+      "orcid": "0000-0002-0393-412X"
+    }
+  ],
+  "description": "<p>Модель нарушителя, который компрометирует участников цепочки сборки и обновления программного обеспечения (сборочный агент, независимую пересборку, хранилище, ключи поставщика, канал доставки) и скрывает, подделывает или повторяет свидетельства, и мера стойкости правила допуска обновлений по семействам наборов компрометации (k-стойкость, доминирование). Сравнение правила допуска SCII с десятью правилами на одних и тех же свидетельствах: подпись поставщика, защита от отката, проверка SLSA, бинарный контроль, строгая схема in-toto, аддитивный и графовый индексы.</p><p>Проверка: полный перебор наборов на профиле конвейера сборки прошивки ArduPilot Copter-4.5.7 (плата CubeOrange) из scii-gate 0.1.5; проверка монотонности исходов правил; эмуляция атак на настоящих артефактах с перевыпущенными ключами (cosign, OpenPGP, Monocypher) и прогоном модуля допуска; испытание реализации на искажённых комплектах. Программа эксперимента зафиксирована до прогона.</p>",
+  "keywords": [
+    "software supply chain",
+    "firmware update",
+    "adversarial evaluation",
+    "attacker model",
+    "k-resilience",
+    "evidence graph",
+    "in-toto",
+    "SLSA",
+    "Sigstore",
+    "cyber-physical systems",
+    "ArduPilot"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/alexqzm/scii-adversarial",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.5281/zenodo.24005892",
+      "relation": "references",
+      "resource_type": "software"
+    }
+  ]
+}

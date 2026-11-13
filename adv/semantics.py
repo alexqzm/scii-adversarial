@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import itertools
+import os
 from dataclasses import dataclass, field
 from typing import Dict, FrozenSet, Iterable, List, Tuple
 
@@ -156,14 +157,21 @@ def entry_unit(d: Deployment, grouping: str, goal: str) -> str:
 
 
 # ---------------- действия нарушителя и лучшая запись (разд. 3.4) ----------------
+#: Семантика гейта. "0.1.5" (протокол 1.0): проверки s51–s53 выполняются только по заявке комплекта, канал может
+#: убрать заявку. "0.1.7": проверки устройства выполняются по образу всегда; канал может снять только подпись
+#: образа для загрузчика (s51 = N), версию и плату он скрыть не может, их изменение меняет образ.
+GATE_SEMANTICS = os.environ.get("ADV_GATE_SEMANTICS", "0.1.5")
+NOT_WITHHOLDABLE = {"0.1.5": set(), "0.1.7": {"s52", "s53"}}[GATE_SEMANTICS]
+
+
 def options(d: Deployment, goal: str, e: str, C: FrozenSet[str]) -> List[str]:
     """Достижимые состояния свидетельства e при наборе участников C (множество участников, не единиц)."""
     opts = {honest_state(d, goal, e)}
     prod = PRODUCER.get(e)
     if prod is not None and prod in C and e in d.anchors:
         opts.add(P)                                 # подделка ключом участника
-    if "CH" in C:
-        opts.add(N)                                 # сокрытие (в том числе s51–s53, см. разд. 3.4)
+    if "CH" in C and e not in NOT_WITHHOLDABLE:
+        opts.add(N)                                 # сокрытие (в 0.1.5 и s51–s53, см. разд. 3.4)
         if e in REPLAY:
             opts.add(REPLAY[e])                     # повтор свидетельства текущего подлинного выпуска
     return sorted(opts, key=RANK.get)
@@ -184,7 +192,7 @@ def action_for(d: Deployment, goal: str, e: str, C: FrozenSet[str], state: str) 
     prod = PRODUCER.get(e)
     if state == P and prod is not None and prod in C and e in d.anchors:
         return "forge"
-    if "CH" in C and state == N:
+    if "CH" in C and state == N and e not in NOT_WITHHOLDABLE:
         return "withhold"
     raise ValueError("состояние %s недостижимо для %s/%s/%s при %s" % (state, d.code, goal, e, sorted(C)))
 

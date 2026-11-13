@@ -28,6 +28,8 @@ SUPPLIED = ["s13", "s14", "s21", "s22", "s23", "s24", "s31", "s32", "s41", "s42"
 STATES = [F, N, P]
 UP = {F: N, N: P}
 SEED = 20240628
+SAMPLE_BLOCKS = 2   # выборка делится на фиксированное число блоков с seed SEED + i: она зависит только от SEED,
+                    # а не от числа процессов (--jobs, число ядер машины CI)
 
 
 def _ind(dec: str):
@@ -102,9 +104,10 @@ def _sample_block(args):
 
 
 def sample(d_code: str, count: int, jobs: int) -> dict:
-    per = count // jobs
-    blocks = [(d_code, SEED + i, per + (count - per * jobs if i == jobs - 1 else 0)) for i in range(jobs)]
-    with Pool(jobs) as pool:
+    per = count // SAMPLE_BLOCKS
+    blocks = [(d_code, SEED + i, per + (count - per * SAMPLE_BLOCKS if i == SAMPLE_BLOCKS - 1 else 0))
+              for i in range(SAMPLE_BLOCKS)]
+    with Pool(max(1, min(jobs, SAMPLE_BLOCKS))) as pool:
         parts = pool.map(_sample_block, blocks)
     viol = {r: [0, 0] for r in RuleSet.CODES}
     raises = 0

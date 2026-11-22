@@ -4,7 +4,10 @@
 
 matplotlib, Liberation Serif, оттенки серого, ширина 16 см, 600 dpi (TIFF и JPG для журнала, PNG для просмотра).
 
+    pip install -r paper/vak6/requirements.txt
     python paper/vak6/fig1.py OUT_BASENAME
+
+matplotlib в основной requirements.txt не входит: рисунок не участвует в проверках CI.
 """
 import sys
 

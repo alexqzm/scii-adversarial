@@ -3,8 +3,11 @@
 
 Каждое число текста статьи берётся отсюда, поэтому расхождение текста и прогона невозможно.
 
-    python paper/vak6/numbers.py            таблица чисел
-    python paper/vak6/numbers.py --json     то же в JSON
+    python paper/vak6/article_numbers.py            таблица чисел
+    python paper/vak6/article_numbers.py --json     то же в JSON
+
+До версии 1.1.1 файл назывался numbers.py. Имя совпадало со стандартным модулем numbers и ломало запуск
+fig1.py из этого же каталога, см. CHANGELOG.md.
 """
 import json
 import os

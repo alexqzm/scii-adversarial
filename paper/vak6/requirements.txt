@@ -1,0 +1,8 @@
+# Зависимости рисунка статьи (paper/vak6/fig1.py). Ставятся отдельно от основной requirements.txt:
+#
+#     pip install -r paper/vak6/requirements.txt
+#
+# Скрипт проверен с этой версией под Python 3.13 (matplotlib 3.11 требует Python 3.11 или новее).
+# Хеши здесь не закреплены, в отличие от основной requirements.txt: рисунок не участвует в проверках
+# результатов и в CI не строится.
+matplotlib==3.11.2

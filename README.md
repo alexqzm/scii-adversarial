@@ -132,6 +132,16 @@ python -m adv.compare analysis NEW.json              # сверка свежег
 
 `adv.mutate` содержит искажения, исчерпывающие память машины. В CI они пропускаются ключом `--skip-memory`.
 
+### Числа и рисунок статьи
+
+```bash
+python paper/vak6/article_numbers.py          # числа статьи из results/*.json, с ключом --json в JSON
+pip install -r paper/vak6/requirements.txt    # matplotlib для рисунка
+python paper/vak6/fig1.py fig1                # fig1.png, fig1.tif и fig1.jpg, 600 dpi
+```
+
+Числам хватает основной установки. Рисунку нужны matplotlib и шрифт Liberation Serif (в Debian и Ubuntu пакет `fonts-liberation`). Без него matplotlib выдаст предупреждение и подставит запасной шрифт, вид рисунка изменится. В основную `requirements.txt` matplotlib не входит: рисунок не участвует в проверках CI.
+
 ## Состав
 
 | Путь | Содержание |
@@ -146,7 +156,7 @@ python -m adv.compare analysis NEW.json              # сверка свежег
 | `adv/fixdiff.py` | сравнение результатов до и после исправления scii-gate |
 | `adv/kdiff.py` | сравнение k-стойкости двух прогонов анализа (семантика гейта 0.1.5 и 0.1.7) |
 | `results/` | результаты прогонов и сводка |
-| `paper/vak6/` | рисунок и пересчёт чисел для статьи |
+| `paper/vak6/` | пересчёт чисел статьи (`article_numbers.py`) и рисунок (`fig1.py`) |
 
 ## Ссылки
 
